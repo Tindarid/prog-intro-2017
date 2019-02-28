@@ -12,53 +12,53 @@ public class SimpleFileManager {
                 loop:
                 while(in.hasNextLine()) {
                     String [] arguments = in.nextLine().split(" ");
-                    DirectoryStream<Path> stream = Files.newDirectoryStream(abs);
                     if (arguments.length == 0) {
                         continue loop;
                     } else if (arguments.length > 2) {
                         printErrorInfFunc();
                         continue loop;
                     } 
-                    String func = arguments[0];
-                    switch (func) {
-                        case "exit":   
-                            break loop;
-                        case "help":   
-                            printHelpFunc();
-                            continue loop;
-                        case "dir":
-                            dirFunc(abs, stream);
-                            continue loop;
-                        default:
-                            if (arguments.length != 2) {
-                                printErrorInfFunc();
+                    try (DirectoryStream<Path> stream = Files.newDirectoryStream(abs)) {
+                        String func = arguments[0];
+                        switch (func) {
+                            case "exit":   
+                                break loop;
+                            case "help":   
+                                printHelpFunc();
                                 continue loop;
-                            } 
-                            break;
-                    }
-                    String arg = arguments[1];
-                    switch (func) {
-                        case "rm":   
-                            rmFunc(arg, stream);
-                            continue loop;
-                        case "cd":
-                            abs = cdFunc(abs, arg);
-                            continue loop;
-                        case "touch":
-                            touchFunc(abs, arg);
-                            continue loop;
-                        case "mkdir":
-                            mkdirFunc(abs, arg);
-                            continue loop;
-                        case "rmdir":
-                            mkdirFunc(abs, arg);
-                            continue loop;
-                        default:
-                            printErrorInfFunc();
-                            break;
+                            case "dir":
+                                dirFunc(abs, stream);
+                                continue loop;
+                            default:
+                                if (arguments.length != 2) {
+                                    printErrorInfFunc();
+                                    continue loop;
+                                } 
+                                break;
+                        }
+                        String arg = arguments[1];
+                        switch (func) {
+                            case "rm":   
+                                rmFunc(arg, stream);
+                                continue loop;
+                            case "cd":
+                                abs = cdFunc(abs, arg);
+                                continue loop;
+                            case "touch":
+                                touchFunc(abs, arg);
+                                continue loop;
+                            case "mkdir":
+                                mkdirFunc(abs, arg);
+                                continue loop;
+                            case "rmdir":
+                                mkdirFunc(abs, arg);
+                                continue loop;
+                            default:
+                                printErrorInfFunc();
+                                break;
+                        }
                     }
                 }
-
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
